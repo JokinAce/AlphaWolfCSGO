@@ -1,0 +1,73 @@
+﻿using System;
+using System.Diagnostics;
+
+namespace AlphaWolf {
+    public static class Memory {
+        public static int ClientDLL, EngineDLL; // DLLs
+
+        public static Rewrite jokin = new Rewrite("csgo");
+
+
+        public static void WriteInt(int offsets, int value) {
+            jokin.WriteInt(offsets, value);
+        }
+
+        public static int ReadInt(int offsets) {
+            return jokin.ReadInt(offsets);
+        }
+
+        public static void WriteString(int offsets, string value) {
+            jokin.WriteString(offsets, value);
+        }
+
+        public static void WriteShort(int offsets, short value) {
+            jokin.WriteShort(offsets, value);
+        }
+
+        public static short ReadShort(int offsets) {
+            return jokin.ReadShort(offsets);
+        }
+
+        public static void WriteFloat(int offsets, float value) {
+            jokin.WriteFloat(offsets, value);
+        }
+
+        public static float ReadFloat(int offsets) {
+            return jokin.ReadFloat(offsets);
+        }
+
+        public static bool ReadBoolean(int offsets) {
+            return jokin.ReadBoolean(offsets);
+        }
+
+        public static void WriteBoolean(int offsets, bool value) {
+            jokin.WriteBoolean(offsets, value);
+        }
+
+        public static bool GetModules() {
+            try {
+                Process[] p = Process.GetProcessesByName("csgo");
+
+                if (p.Length > 0) {
+                    foreach (ProcessModule m in p[0].Modules) {
+                        switch (m.ModuleName) {
+                            case "client.dll":
+                                ClientDLL = (int)m.BaseAddress;
+                                Console.WriteLine("Client found");
+                                break;
+                            case "engine.dll":
+                                EngineDLL = (int)m.BaseAddress;
+                                Console.WriteLine("Engine found");
+                                break;
+                        }
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (Exception) {
+                return false;
+            }
+        }
+    }
+}
